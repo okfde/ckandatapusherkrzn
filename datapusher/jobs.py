@@ -172,7 +172,7 @@ class DatastoreEncoder(json.JSONEncoder):
 def delete_datastore_resource(resource_id, api_key, ckan_url):
     try:
         delete_url = get_url('datastore_delete', ckan_url)
-        response = requests.post(delete_url,
+        response = requests.post(delete_url, verify=False,
                                  data=json.dumps({'id': resource_id,
                                                   'force': True}),
                                  headers={'Content-Type': 'application/json',
@@ -187,7 +187,7 @@ def delete_datastore_resource(resource_id, api_key, ckan_url):
 def datastore_resource_exists(resource_id, api_key, ckan_url):
     try:
         search_url = get_url('datastore_search', ckan_url)
-        response = requests.post(search_url,
+        response = requests.post(search_url, verify=False,
                                  params={'id': resource_id,
                                          'limit': 0},
                                  headers={'Content-Type': 'application/json',
@@ -214,7 +214,7 @@ def send_resource_to_datastore(resource, headers, records, api_key, ckan_url):
 
     name = resource.get('name')
     url = get_url('datastore_create', ckan_url)
-    r = requests.post(url,
+    r = requests.post(url,verify=False,
                       data=json.dumps(request, cls=DatastoreEncoder),
                       headers={'Content-Type': 'application/json',
                                'Authorization': api_key},
@@ -230,8 +230,7 @@ def update_resource(resource, api_key, ckan_url):
     resource['url_type'] = 'datapusher'
 
     url = get_url('resource_update', ckan_url)
-    r = requests.post(
-        url,
+    r = requests.post(url, verify=False,
         data=json.dumps(resource),
         headers={'Content-Type': 'application/json',
                  'Authorization': api_key})
@@ -244,7 +243,7 @@ def get_resource(resource_id, ckan_url, api_key):
     Gets available information about the resource from CKAN
     """
     url = get_url('resource_show', ckan_url)
-    r = requests.post(url,
+    r = requests.post(url,verify=False,
                       data=json.dumps({'id': resource_id}),
                       headers={'Content-Type': 'application/json',
                                'Authorization': api_key}
